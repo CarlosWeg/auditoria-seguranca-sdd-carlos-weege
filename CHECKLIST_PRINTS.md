@@ -46,6 +46,20 @@ Se puder mandar um print adicional, abra também `docs/sdd/02-design.md` mostran
 
 ---
 
+## Print opcional — Configuração do projeto no SonarQube
+**Tela:** SonarQube Cloud → criação/configuração do projeto.  
+**Pode aparecer:**
+- Organization `CarlosWeg`;
+- Display Name `MiniRisk - Auditoria e Segurança de Sistemas`;
+- Project Key `CarlosWeg_minirisk`;
+- visibilidade `Public`.
+
+**Prova:** identificação do projeto utilizado pela pipeline.
+
+> Não tire print de nenhum token.
+
+---
+
 ## Print 5 — Dashboard do SonarQube
 **Tela:** SonarQube Cloud → projeto MiniRisk → Overview/Summary.  
 **Deve aparecer:**

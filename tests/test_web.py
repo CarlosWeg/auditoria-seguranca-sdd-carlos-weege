@@ -41,13 +41,14 @@ def test_analysis_requires_csrf():
 def test_valid_analysis():
     app.config.update(TESTING=True, SECRET_KEY=secrets.token_hex(32))
     client = app.test_client()
+    csrf_token = secrets.token_urlsafe(32)
     with client.session_transaction() as sess:
-        sess["csrf_token"] = "valid-token"
+        sess["csrf_token"] = csrf_token
 
     response = client.post(
         "/analyze",
         data={
-            "csrf_token": "valid-token",
+            "csrf_token": csrf_token,
             "asset_name": "Portal do Cliente",
             "exposure": "internet",
             "criticality": "high",

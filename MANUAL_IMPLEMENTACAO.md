@@ -69,36 +69,108 @@ Neste momento o Actions ficará vermelho, pois ainda faltam SonarQube e AWS. Iss
 
 ---
 
-## 3. Configurar o SonarQube Cloud
+## 3. Configurar o SonarQube Cloud — passo a passo exato
 
-1. Acesse o **SonarQube Cloud** e entre usando GitHub.
-2. Importe/crie um projeto a partir do repositório `auditoria-seguranca-sdd-carlos-weege`. O repositório já contém `sonar-project.properties`, o que ajuda a indicar que a análise será feita pelo CI.
-3. Em **Administration → Analysis Method**, confirme que **Automatic Analysis está OFF**, pois este projeto usa análise pelo GitHub Actions.
-4. Anote:
-   - **Organization Key**.
-   - **Project Key**.
-5. No SonarQube, gere um token pessoal para análise e copie o valor.
+Acesse o **SonarQube Cloud** e entre usando sua conta GitHub. Para este trabalho, use os valores abaixo exatamente como estão escritos.
 
-No GitHub, abra seu repositório:
+### 3.1 Tela `Analyze projects` / criação manual do projeto
 
-### 3.1 Secret
-`Settings` → `Secrets and variables` → `Actions` → aba **Secrets** → `New repository secret`
+Quando aparecer a tela com **Organization**, **Display Name**, **Project Key** e **Project visibility**, preencha assim:
+
+```text
+Organization: CarlosWeg
+Display Name: MiniRisk - Auditoria e Segurança de Sistemas
+Project Key: CarlosWeg_minirisk
+Project visibility: Public
+```
+
+Explicação rápida:
+- **Organization:** mantenha `CarlosWeg`, que é sua organização no SonarQube Cloud.
+- **Display Name:** é apenas o nome amigável exibido no painel.
+- **Project Key:** deve ficar exatamente `CarlosWeg_minirisk`, porque este mesmo valor será cadastrado no GitHub Actions.
+- **Public:** facilita a demonstração acadêmica e os prints. Se você tiver um motivo para não expor a análise, `Private` também funciona tecnicamente.
+
+Depois, avance/crie o projeto.
+
+> Se aparecer uma opção recomendando importar o repositório do GitHub em vez de configuração manual, você pode continuar com o projeto que está criando. O pipeline deste trabalho fornece explicitamente o `organization` e o `projectKey`.
+
+### 3.2 Método de análise
+
+Este projeto **não deve depender da análise automática do SonarQube**, porque precisamos provar que o scanner faz parte da pipeline.
+
+Procure no projeto por **Administration / Analysis Method** (a nomenclatura pode aparecer como `Analysis Method`) e deixe:
+
+```text
+Automatic Analysis: OFF
+```
+
+A análise será executada pelo **GitHub Actions**, no passo `SonarQube Cloud scan`.
+
+Se o SonarQube oferecer uma escolha de método de análise, escolha a opção equivalente a:
+
+```text
+CI-based analysis / GitHub Actions
+```
+
+### 3.3 Gerar o `SONAR_TOKEN`
+
+No SonarQube Cloud, abra seu avatar/perfil e procure:
+
+```text
+My Account → Security
+```
+
+Na área de geração de tokens:
+1. Dê um nome como `github-actions-minirisk`.
+2. Gere o token.
+3. **Copie o token imediatamente**, pois ele pode não ser mostrado novamente.
+4. Não coloque esse valor em nenhum arquivo do projeto.
+
+### 3.4 Cadastrar o token no GitHub
+
+No GitHub, abra o repositório e vá em:
+
+```text
+Settings → Secrets and variables → Actions → Secrets → New repository secret
+```
 
 Crie:
 
 ```text
-SONAR_TOKEN = <token copiado do SonarQube>
+Name: SONAR_TOKEN
+Secret: <cole aqui o token gerado no SonarQube>
 ```
 
-### 3.2 Variables
-Na aba **Variables**, crie:
+### 3.5 Cadastrar as Variables do SonarQube no GitHub
+
+Ainda em:
 
 ```text
-SONAR_ORGANIZATION = <organization key>
-SONAR_PROJECT_KEY   = <project key>
+Settings → Secrets and variables → Actions
 ```
 
-Não coloque o token em arquivo ou commit.
+Abra a aba **Variables** e crie estas duas variáveis exatamente:
+
+```text
+Name: SONAR_ORGANIZATION
+Value: CarlosWeg
+
+Name: SONAR_PROJECT_KEY
+Value: CarlosWeg_minirisk
+```
+
+Ao terminar a configuração do SonarQube, você terá:
+
+```text
+SECRET
+SONAR_TOKEN = valor secreto gerado pelo SonarQube
+
+VARIABLES
+SONAR_ORGANIZATION = CarlosWeg
+SONAR_PROJECT_KEY = CarlosWeg_minirisk
+```
+
+> **Importante para os prints:** nunca mostre o conteúdo do `SONAR_TOKEN`. É seguro mostrar apenas o nome do secret, porque o GitHub oculta seu valor.
 
 ---
 
@@ -279,3 +351,23 @@ EC2 → Instances → minirisk-sdd → Instance state → Terminate instance
 ```
 
 Se você não for reutilizar, remova também recursos relacionados que tenham cobrança própria.
+
+## Solução de problemas da pipeline
+
+### Ruff: `I001 Import block is un-sorted or un-formatted`
+Garanta uma linha em branco entre imports da biblioteca padrão e imports de terceiros. Em `app/main.py`, o início correto é:
+
+```python
+import os
+import secrets
+
+from flask import Flask, abort, render_template, request, session
+
+from app.risk import RiskInput, evaluate_risk
+```
+
+### Ruff: `S105 Possible hardcoded password` em teste
+Não use um token literal como `"valid-token"`. O teste atualizado gera um valor aleatório com `secrets.token_urlsafe(32)` e reutiliza esse mesmo valor na sessão e no POST.
+
+Depois de corrigir, faça commit e push novamente. O GitHub Actions executará a pipeline do início.
+

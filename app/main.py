@@ -1,5 +1,6 @@
 import os
 import secrets
+
 from flask import Flask, abort, render_template, request, session
 
 from app.risk import RiskInput, evaluate_risk
