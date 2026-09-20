@@ -41,7 +41,7 @@ Acesse: `http://127.0.0.1:8000`
 python -m venv .venv
 # Ative o ambiente virtual
 pip install -r requirements-dev.txt
-pytest --cov=app
+python -m pytest --cov=app
 ruff check .
 bandit -c pyproject.toml -r app
 pip-audit -r requirements.txt

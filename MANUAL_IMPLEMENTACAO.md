@@ -371,3 +371,7 @@ Não use um token literal como `"valid-token"`. O teste atualizado gera um valor
 
 Depois de corrigir, faça commit e push novamente. O GitHub Actions executará a pipeline do início.
 
+### Erro `ModuleNotFoundError: No module named app` no Pytest
+
+O projeto já está configurado para evitar esse erro no GitHub Actions. O workflow executa os testes com `python -m pytest` e o `pyproject.toml` define `pythonpath = ["."]`. Se estiver usando uma versão antiga do repositório, atualize esses dois arquivos antes de executar a pipeline novamente.
+

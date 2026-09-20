@@ -1,7 +1,7 @@
 .PHONY: test lint security docker
 
 test:
-	pytest --cov=app --cov-report=term
+	python -m pytest --cov=app --cov-report=term
 
 lint:
 	ruff check .
