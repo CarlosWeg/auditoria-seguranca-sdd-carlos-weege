@@ -1,0 +1,31 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #151515;
+  background: #ecebe7;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+.shell { width: min(920px, calc(100% - 32px)); margin: 0 auto; padding: 56px 0 32px; }
+.hero { padding: 24px 4px 30px; border-bottom: 1px solid #bbb9b2; }
+.eyebrow { font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; color: #69675f; }
+h1 { font-size: clamp(3rem, 9vw, 6.5rem); line-height: .9; margin: 12px 0 18px; letter-spacing: -.07em; }
+.hero p { max-width: 680px; font-size: 1.12rem; line-height: 1.6; margin: 0; color: #4a4944; }
+.card { background: #f8f7f3; border: 1px solid #cfcdc5; border-radius: 18px; padding: 28px; margin-top: 24px; box-shadow: 0 14px 32px rgba(24,24,20,.06); }
+h2 { margin: 0 0 22px; font-size: 1.75rem; }
+h3 { margin-top: 0; }
+label, legend { font-weight: 650; font-size: .95rem; }
+input[type="text"], input:not([type]), select { width: 100%; }
+input, select { margin-top: 8px; border: 1px solid #b9b7af; border-radius: 10px; padding: 12px 13px; background: white; font: inherit; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+fieldset { border: 0; padding: 0; margin: 22px 0 0; }
+.inline { display: inline-flex; align-items: center; gap: 8px; margin: 10px 18px 0 0; font-weight: 500; }
+.inline input { margin: 0; }
+button { margin-top: 26px; width: 100%; border: 0; border-radius: 11px; padding: 14px 18px; font: inherit; font-weight: 750; background: #191919; color: white; cursor: pointer; }
+button:hover { opacity: .9; }
+.alert { border-left: 4px solid #8d2d2d; background: #fff1f0; padding: 13px 16px; margin-bottom: 18px; }
+.result { display: grid; grid-template-columns: .8fr 1.2fr; gap: 32px; }
+.result h2 { font-size: 2.2rem; margin: 8px 0; }
+.score { font-size: 1.15rem; }
+.result li { margin: 8px 0; line-height: 1.45; }
+footer { display: flex; justify-content: space-between; gap: 20px; color: #6c6962; font-size: .78rem; padding: 24px 4px 0; }
+@media (max-width: 660px) { .grid, .result { grid-template-columns: 1fr; } footer { flex-direction: column; } }

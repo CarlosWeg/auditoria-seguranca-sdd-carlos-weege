@@ -1,0 +1,46 @@
+Spec: MiniRisk
+Platform: Python 3.13, Flask, Docker, GitHub Actions, SonarQube Cloud, AWS EC2
+
+Purpose:
+  Avaliar de forma simples o risco de um ativo de TI a partir de fatores objetivos.
+  Demonstrar desenvolvimento orientado por especificação, controles de segurança e CI/CD.
+
+Owns:
+  ./app/
+  ./tests/
+  ./Dockerfile
+  ./.github/workflows/ci-cd.yml
+
+Must:
+  Receber nome do ativo, exposição, presença de dados sensíveis, MFA e criticidade.
+  Calcular o resultado por regras determinísticas e testáveis.
+  Exibir nível Baixo, Médio ou Alto e recomendações relacionadas aos fatores informados.
+  Validar entradas no servidor.
+  Proteger requisições POST contra CSRF.
+  Emitir cabeçalhos básicos de segurança HTTP.
+  Executar testes, análise estática, auditoria de dependências e SonarQube antes do deploy.
+  Implantar em uma instância AWS EC2 somente após o job de qualidade e segurança ser aprovado.
+
+Must not:
+  Persistir dados informados pelo usuário.
+  Armazenar segredos no repositório Git.
+  Fazer deploy quando testes ou scanners falharem.
+  Executar o contêiner da aplicação como root.
+
+Scenario: ativo de alto risco
+  Given um ativo exposto à Internet, com dados sensíveis, sem MFA e criticidade alta
+  When a avaliação for executada
+  Then a pontuação será 11
+  And o nível será Alto
+  And serão apresentadas recomendações de mitigação
+
+Scenario: requisição POST sem CSRF
+  Given uma requisição ao endpoint de análise sem token CSRF válido
+  When o servidor processar a requisição
+  Then a resposta será HTTP 400
+
+Done when:
+  Todos os testes automatizados passam.
+  O pipeline executa Bandit, pip-audit e SonarQube com sucesso.
+  A imagem Docker responde em /healthz.
+  O deploy em EC2 termina com health check HTTP bem-sucedido.

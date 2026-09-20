@@ -1,0 +1,23 @@
+Spec: Motor de Risco
+Platform: Python 3.13
+
+Purpose:
+  Transformar os fatores informados em uma pontuação de risco reproduzível.
+
+Owns:
+  ./risk.py
+
+Must:
+  Somar 3 pontos se o ativo estiver exposto à Internet.
+  Somar 3 pontos se o ativo tratar dados sensíveis.
+  Somar 2 pontos se MFA estiver ausente.
+  Somar 0, 1 ou 3 pontos para criticidade baixa, média ou alta.
+  Classificar 0-3 como Baixo, 4-6 como Médio e 7-11 como Alto.
+  Retornar recomendações associadas aos fatores que elevaram o risco.
+
+Must not:
+  Acessar rede, banco de dados ou sistema de arquivos.
+  Produzir resultado aleatório.
+
+Done when:
+  Os limites Baixo, Médio e Alto estão cobertos por testes automatizados.

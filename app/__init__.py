@@ -1,0 +1,1 @@
+"""MiniRisk web application package."""

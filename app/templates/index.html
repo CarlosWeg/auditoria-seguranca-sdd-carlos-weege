@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MiniRisk | Avaliação de Risco</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <span class="eyebrow">Auditoria e Segurança de Sistemas</span>
+      <h1>MiniRisk</h1>
+      <p>Avaliação simples de risco de um ativo de TI, desenvolvida a partir de especificações SDD.</p>
+    </section>
+
+    <section class="card">
+      <h2>Dados do ativo</h2>
+      {% if errors %}
+        <div class="alert" role="alert">
+          <strong>Revise os dados:</strong>
+          <ul>{% for error in errors %}<li>{{ error }}</li>{% endfor %}</ul>
+        </div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('analyze') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <label for="asset_name">Nome do ativo</label>
+        <input id="asset_name" name="asset_name" maxlength="80" required placeholder="Ex.: Portal do Cliente">
+
+        <div class="grid">
+          <div>
+            <label for="exposure">Exposição</label>
+            <select id="exposure" name="exposure" required>
+              <option value="internal">Somente rede interna</option>
+              <option value="internet">Exposto à Internet</option>
+            </select>
+          </div>
+          <div>
+            <label for="criticality">Criticidade</label>
+            <select id="criticality" name="criticality" required>
+              <option value="low">Baixa</option>
+              <option value="medium">Média</option>
+              <option value="high">Alta</option>
+            </select>
+          </div>
+        </div>
+
+        <fieldset>
+          <legend>O ativo trata dados sensíveis?</legend>
+          <label class="inline"><input type="radio" name="sensitive_data" value="yes" required> Sim</label>
+          <label class="inline"><input type="radio" name="sensitive_data" value="no" required> Não</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Existe MFA para acesso administrativo?</legend>
+          <label class="inline"><input type="radio" name="mfa_enabled" value="yes" required> Sim</label>
+          <label class="inline"><input type="radio" name="mfa_enabled" value="no" required> Não</label>
+        </fieldset>
+
+        <button type="submit">Calcular risco</button>
+      </form>
+    </section>
+
+    {% if result %}
+    <section class="card result">
+      <div>
+        <span class="eyebrow">Resultado para {{ asset_name }}</span>
+        <h2>Risco {{ result.level }}</h2>
+        <p class="score">Pontuação: <strong>{{ result.score }}/11</strong></p>
+      </div>
+      <div>
+        <h3>Recomendações</h3>
+        <ul>
+          {% for item in result.recommendations %}<li>{{ item }}</li>{% endfor %}
+        </ul>
+      </div>
+    </section>
+    {% endif %}
+
+    <footer>
+      <span>Projeto acadêmico — Carlos H. A. Weeege</span>
+      <span>Spec-Driven Development • CI/CD • SonarQube • AWS EC2</span>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,22 @@
+Spec: Interface Web Segura
+Platform: Flask
+
+Purpose:
+  Coletar os fatores de risco e apresentar o resultado sem persistir dados.
+
+Owns:
+  ./main.py
+  ./templates/
+  ./static/
+
+Must:
+  Escapar valores apresentados no HTML por meio do mecanismo de templates do Flask.
+  Validar no servidor os valores enumerados e o tamanho do nome do ativo.
+  Exigir token CSRF em POST /analyze.
+  Limitar o corpo de requisições a 16 KiB.
+  Emitir CSP, X-Content-Type-Options, X-Frame-Options, Referrer-Policy e Permissions-Policy.
+  Expor GET /healthz para verificação do deploy.
+
+Must not:
+  Armazenar os dados submetidos.
+  Exibir stack traces ao usuário em produção.
